@@ -11,17 +11,17 @@
 
     public static string CalculateCheckDigit(string input)
     {
-        int length = input.Length;
-        int inputNum = int.Parse(input);
+        int number = int.Parse(input);
         int sum = 0;
 
-        for (int i = 0; i < length; i++)
+        for (int i = 2; i <= 10; i++)
         {
-            sum += (inputNum / (int)Math.Pow(10, length - 1 - i)) * (length + 1 - i);
-            inputNum = inputNum % (int)Math.Pow(10, length - 1 - i);
+            var digit = number % 10;
+            number /= 10;
+            sum += i * digit;
         }
 
-        int checkDigit = 11 - (sum % 11);
+        int checkDigit = (11 - (sum % 11)) % 11;
 
         return checkDigit == 10 ? "X" : checkDigit.ToString();
     }
