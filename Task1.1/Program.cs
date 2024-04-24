@@ -8,53 +8,32 @@
         Console.Write("Input second number: ");
         int b = int.Parse(Console.ReadLine());
 
-        for (int i = a; i <= b; i++)
+        int start = Math.Min(a, b);
+        int end = Math.Max(a, b);
+
+        for (int i = start; i <= end; i++)
         {
-            var duodecimal = DecimalToDuodecimal(i);
-            if (HasTwoASymbols(duodecimal))
+            if (HasTwoASymbols(i))
             {
                 Console.WriteLine(i);
             }
         }
     }
-    public static bool HasTwoASymbols(string num)
+
+    public static bool HasTwoASymbols(int decimalNum)
     {
         int count = 0;
-
-        foreach (var x in num)
-        {
-            if (x == 'A')
-            {
-                count++;
-            }
-        }
-        return count == 2;
-    }
-
-    public static string DecimalToDuodecimal(int decimalNum)
-    {
-        string duodecimal = "";
 
         while (decimalNum > 0)
         {
             var remainder = decimalNum % 12;
 
-            if (remainder < 10)
+            if (Math.Abs(remainder) == 10)
             {
-                duodecimal = remainder + duodecimal;
+                count++;
             }
-            else if (remainder == 10)
-            {
-                duodecimal = "A" + duodecimal;
-            }
-            else if (remainder == 11)
-            {
-                duodecimal = "B" + duodecimal;
-            }
-
             decimalNum /= 12;
         }
-
-        return duodecimal;
+        return count == 2;
     }
 }
