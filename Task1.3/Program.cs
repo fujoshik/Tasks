@@ -13,7 +13,7 @@
         }
         Console.WriteLine("Array: " + string.Join(" ", array));
 
-        var uniqueIntegers = FindUniqueValues(array);
+        var uniqueIntegers = CreateSet(array);
 
         Console.Write("Unique integers: ");
         for (int i = 0; i < uniqueIntegers.Length; i++)
@@ -22,9 +22,9 @@
         }
     }
 
-    public static int[] FindUniqueValues(int[] array)
+    public static int[] CreateSet(int[] array)
     {
-        int[] uniqueIntegers = new int[array.Length];
+        int[] tempArray = new int[array.Length];
         int uniqueIntegersCount = 0;
 
         for (int i = 0; i < array.Length; i++)
@@ -39,10 +39,13 @@
             }
             if (i == j)
             {
-                uniqueIntegers[uniqueIntegersCount] = array[i];
+                tempArray[uniqueIntegersCount] = array[i];
                 uniqueIntegersCount++;
             }
         }
+
+        int[] uniqueIntegers = new int[uniqueIntegersCount];
+        Array.Copy(tempArray, uniqueIntegers, uniqueIntegersCount);
 
         return uniqueIntegers;
     }
