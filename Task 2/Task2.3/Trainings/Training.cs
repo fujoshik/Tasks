@@ -1,19 +1,17 @@
-﻿using Task2._3.Trainings.Interfaces;
-
-namespace Task2._3.Trainings
+﻿namespace Task2._3.Trainings
 {
-    public class Training : BaseTraining
+    public class Training : TrainingEntity
     {
         private int _trainingsCount;
-        private ITraining[] _trainings;
+        private BaseTraining[] _trainings;
 
         public Training(string description)
-            : base(description)
         {
-            _trainings = new ITraining[1];
+            Description = description;
+            _trainings = new BaseTraining[1];
         }
 
-        public void Add(ITraining training)
+        public void Add(BaseTraining training)
         {
             if (_trainings.Length == _trainingsCount)
             {
@@ -39,16 +37,15 @@ namespace Task2._3.Trainings
         {
             var cloned = new Training(Description);
 
-            for (int i = 0; i < _trainingsCount; i++)
+            foreach (var training in _trainings)
             {
-                if (_trainings[i] is PracticalLesson practicalLesson)
+                if (training is Lecture lecture)
                 {
-                    cloned.Add(new PracticalLesson(practicalLesson.Description,
-                        practicalLesson.TaskLink, practicalLesson.SolutionLink));
+                    cloned.Add(lecture.Clone() as Lecture);
                 }
-                else if (_trainings[i] is Lecture lecture)
+                else if (training is PracticalLesson lesson)
                 {
-                    cloned.Add(new Lecture(lecture.Description, lecture.Topic));
+                    cloned.Add(lesson.Clone() as PracticalLesson);
                 }
             }
 
@@ -57,7 +54,7 @@ namespace Task2._3.Trainings
 
         private void ResizeArray()
         {
-            var newArray = new ITraining[_trainingsCount * 2];
+            var newArray = new BaseTraining[_trainingsCount * 2];
             Array.Copy(_trainings, newArray, _trainingsCount);
             _trainings = newArray;
         }

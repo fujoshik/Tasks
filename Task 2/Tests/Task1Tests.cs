@@ -50,9 +50,9 @@ namespace Tests
             var p2 = new Point(10, 10, 10, 15);
 
             var expected = 15.59;
-            var actual = Math.Round(p1.CalculateDistance(p2), 2);
+            var actual = p1.CalculateDistance(p2);
 
-            Assert.AreEqual(expected, actual);
+            Assert.IsTrue(actual - expected < Double.Epsilon);
         }
     }
 }

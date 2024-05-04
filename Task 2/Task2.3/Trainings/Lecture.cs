@@ -1,14 +1,17 @@
-﻿using Task2._3.Trainings.Interfaces;
-
-namespace Task2._3.Trainings
+﻿namespace Task2._3.Trainings
 {
-    public class Lecture : BaseTraining, ITraining
+    public class Lecture : BaseTraining
     {
         public string Topic { get; set; }
         public Lecture(string description, string topic)
-            : base(description)
         {
+            Description = description;
             Topic = topic;
+        }
+
+        public override object Clone()
+        {
+            return new Lecture(Description, Topic);
         }
     }
 }

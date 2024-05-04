@@ -1,12 +1,7 @@
 ﻿namespace Task2._3.Trainings
 {
-    public class BaseTraining
+    public abstract class BaseTraining : TrainingEntity, ICloneable
     {
-        public string Description { get; set; }
-
-        public BaseTraining(string description)
-        {
-            Description = description;
-        }
+        public abstract object Clone();
     }
 }
