@@ -2,28 +2,28 @@
 {
     public class Training : TrainingEntity
     {
-        private int _trainingsCount;
-        private BaseTraining[] _trainings;
+        private int _trainingEntitiesCount;
+        private BaseTraining[] _trainingEntities;
 
         public Training(string description)
         {
             Description = description;
-            _trainings = new BaseTraining[1];
+            _trainingEntities = new BaseTraining[1];
         }
 
         public void Add(BaseTraining training)
         {
-            if (_trainings.Length == _trainingsCount)
+            if (_trainingEntities.Length == _trainingEntitiesCount)
             {
                 ResizeArray();
             }
-            _trainings[_trainingsCount] = training;
-            _trainingsCount++;
+            _trainingEntities[_trainingEntitiesCount] = training;
+            _trainingEntitiesCount++;
         }
 
         public bool IsPractical()
         {
-            foreach (var training in _trainings)
+            foreach (var training in _trainingEntities)
             {
                 if (training is Lecture)
                 {
@@ -37,16 +37,9 @@
         {
             var cloned = new Training(Description);
 
-            foreach (var training in _trainings)
+            foreach (var training in _trainingEntities)
             {
-                if (training is Lecture lecture)
-                {
-                    cloned.Add(lecture.Clone() as Lecture);
-                }
-                else if (training is PracticalLesson lesson)
-                {
-                    cloned.Add(lesson.Clone() as PracticalLesson);
-                }
+                cloned.Add((BaseTraining)training.Clone());
             }
 
             return cloned;
@@ -54,9 +47,9 @@
 
         private void ResizeArray()
         {
-            var newArray = new BaseTraining[_trainingsCount * 2];
-            Array.Copy(_trainings, newArray, _trainingsCount);
-            _trainings = newArray;
+            var newArray = new BaseTraining[_trainingEntitiesCount * 2];
+            Array.Copy(_trainingEntities, newArray, _trainingEntitiesCount);
+            _trainingEntities = newArray;
         }
     }
 }

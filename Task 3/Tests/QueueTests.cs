@@ -79,12 +79,12 @@ namespace Tests
         [TestMethod]
         public void Tail_Success()
         {
-            var queue = new Task3.Queue<int>();
+            var queue = new Task3.Queue<int>(3);
             queue.Enqueue(1);
             queue.Enqueue(2);
             queue.Enqueue(3);
 
-            var result = queue.Tail<int>();
+            var result = queue.Tail<int>(3);
 
             Assert.AreEqual(2, result.Dequeue());
             Assert.AreEqual(3, result.Dequeue());
