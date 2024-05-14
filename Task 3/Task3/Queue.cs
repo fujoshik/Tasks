@@ -1,8 +1,6 @@
-﻿using System.Xml.Linq;
-
-namespace Task3
+﻿namespace Task3
 {
-    public class Queue<T> : IQueue<T>
+    public class Queue<T> : IQueue<T> where T : struct
     {
         private T[] _queue;
         private int _head = 0;
@@ -54,9 +52,9 @@ namespace Task3
         {
             var newQueue = new Queue<T>(_size);
 
-            foreach (var item in _queue)
+            for (int i = _head; i < _tail; i++)
             {
-                newQueue.Enqueue(item);
+                newQueue.Enqueue(_queue[i]);
             }
 
             return newQueue;

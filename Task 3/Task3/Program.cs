@@ -1,6 +1,6 @@
 ﻿using Task3;
 
-var queue = new Task3.Queue<int>();
+var queue = new Task3.Queue<int>(5);
 queue.Enqueue(1);
 queue.Enqueue(2);
 queue.Enqueue(3);
