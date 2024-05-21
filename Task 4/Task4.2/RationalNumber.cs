@@ -22,7 +22,7 @@
             }
         }
 
-        public int GreatestCommonDivisor(int a, int b)
+        private int GreatestCommonDivisor(int a, int b)
         {
             if (a < 0)
             {
@@ -76,16 +76,7 @@
             {
                 return 1;
             }
-            int lcm = LeastCommonMultiple(Denominator, other.Denominator);
-            if (lcm / Denominator > lcm /other.Denominator)
-            {
-                return 1;
-            }
-            if (lcm / Denominator < lcm / other.Denominator)
-            {
-                return -1;
-            }
-            return 0;
+            return (Numerator * other.Denominator).CompareTo(other.Numerator * Denominator);
         }
 
         public static RationalNumber operator +(RationalNumber left, RationalNumber right)
