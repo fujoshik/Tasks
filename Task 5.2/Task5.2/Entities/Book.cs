@@ -4,7 +4,7 @@
     {
         public string Title { get; set; }
         public DateTime? PublicationDate { get; set; }
-        public List<string> Authors { get; set; }
+        public HashSet<string> Authors { get; set; }
 
         public Book(string title)
         {
@@ -13,14 +13,14 @@
                 throw new ArgumentNullException(nameof(title));
             }
             Title = title;
-            Authors = new List<string>();
+            Authors = new HashSet<string>();
         }
 
-        public Book(string title, DateTime publicationDate, IList<string> authors)
+        public Book(string title, DateTime publicationDate, HashSet<string> authors)
             : this(title)
         {
             PublicationDate = publicationDate;
-            Authors = authors.Distinct().ToList();
+            Authors = authors;
         }
     }
 }
