@@ -4,7 +4,7 @@ namespace Task5._1
 {
     public class SparseMatrix : IEnumerable<long>
     {
-        private long[,] _elements;
+        private Dictionary<Tuple<int,int>, long> _elements;
         public int Rows { get; private set; }
         public int Columns { get; private set; }
         public SparseMatrix(int rows, int columns)
@@ -19,7 +19,7 @@ namespace Task5._1
             }
             Rows = rows;
             Columns = columns;
-            _elements = new long[rows, columns];
+            _elements = new Dictionary<Tuple<int, int>, long>();
         }
 
         public long this[int i, int j]
@@ -30,7 +30,9 @@ namespace Task5._1
                 {
                     throw new IndexOutOfRangeException("Indexes must be greater than 0 and less than the size of the matrix");
                 }
-                return _elements[i, j];
+
+                var key = new Tuple<int, int>(i, j);
+                return _elements.ContainsKey(key) ? _elements[key] : 0;
             }
             set
             {
@@ -38,7 +40,17 @@ namespace Task5._1
                 {
                     throw new IndexOutOfRangeException("Indexes must be greater than 0 and less than the size of the matrix");
                 }
-                _elements[i, j] = value;
+
+                var key = new Tuple<int, int>(i, j);
+
+                if (_elements.ContainsKey(key))
+                {
+                    _elements[key] = value;
+                }
+                else
+                {
+                    _elements.Add(key, value);
+                }
             }
         }
 
@@ -50,9 +62,9 @@ namespace Task5._1
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    if (_elements[i, j] != 0)
+                    if (_elements[new Tuple<int,int>(i, j)] != 0)
                     {
-                        result += $"{_elements[i, j]} ";
+                        result += $"{_elements[new Tuple<int, int>(i, j)]} ";
                     }                      
                 }
             }
@@ -62,7 +74,13 @@ namespace Task5._1
 
         public IEnumerator<long> GetEnumerator()
         {
-            return _elements.GetEnumerator() as IEnumerator<long>;
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    yield return this[i, j];
+                }
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -77,9 +95,9 @@ namespace Task5._1
             {
                 for (int j = 0; j < Rows; j++)
                 {
-                    if (_elements[j, i] != 0)
+                    if (_elements[new Tuple<int, int>(j, i)] != 0)
                     {
-                        result.Add((j, i, _elements[j, i]));
+                        result.Add((j, i, _elements[new Tuple<int, int>(j, i)]));
                     }
                 }
             }
@@ -94,7 +112,7 @@ namespace Task5._1
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    if (_elements[i, j] == x)
+                    if (_elements[new Tuple<int,int>(i, j)] == x)
                     {
                         count++;
                     }
