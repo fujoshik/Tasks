@@ -30,23 +30,8 @@ namespace Task5._2.Entities
 
         private bool IsInCorrectFormat(string isbn)
         {
-            if (isbn.Count(x => x == '-') == 4 && isbn.Length == 17)
-            {
-                if (isbn.Take(3).All(x => char.IsDigit(x)) && isbn.Skip(3).First() == '-' &&
-                char.IsDigit(isbn.Skip(4).First()) && isbn.Skip(5).First() == '-' &&
-                isbn.Skip(6).Take(2).All(x => char.IsDigit(x)) && isbn.Skip(8).First() == '-' &&
-                isbn.Skip(9).Take(6).All(x => char.IsDigit(x)) && isbn.Skip(15).First() == '-' &&
-                char.IsDigit(isbn.Last()))
-                {
-                    return true;
-                }
-            }
-            else if (isbn.Length == 13 && !isbn.Contains("-") && isbn.All(x => char.IsDigit(x)))
-            {
-                return true;
-            }
-
-            return false;           
+            return (isbn.Length == 17 && Regex.IsMatch(isbn, @"\d{3}-\d{1}-\d{2}-\d{6}-\d{1}")) || 
+                (isbn.Length == 13 && Regex.IsMatch(isbn, @"\d{13}"));
         }
 
         public Book GetBook(string isbn)
