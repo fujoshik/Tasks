@@ -1,15 +1,15 @@
 ﻿namespace Task7.Entities
 {
-    public class Catalog<T> where T : Book
+    public class Catalog
     {
-        public Dictionary<string, T> Books { get; set; }
+        public Dictionary<string, Book> Books { get; private set; }
 
         public Catalog()
         {
-            Books = new Dictionary<string, T>();
+            Books = new Dictionary<string, Book>();
         }
 
-        public void AddBook(string identifier, T book)
+        public void AddBook(string identifier, Book book)
         {
             if (Books.ContainsKey(identifier))
             {
@@ -17,6 +17,20 @@
             }
 
             Books.Add(identifier, book);
+        }
+
+        public Book GetBook(string isbn)
+        {
+            if (Books.TryGetValue(isbn, out Book book))
+            {
+                return book;
+            }
+            return null;
+        }
+
+        public IList<Book> GetBooksByAuthor(Author author)
+        {
+            return Books.Values.Where(x => x.Authors.Contains(author)).ToList();
         }
     }
 }

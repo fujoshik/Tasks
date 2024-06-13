@@ -1,35 +1,16 @@
-﻿namespace Task7.Entities
+﻿using Task7.Factories.Abstraction;
+
+namespace Task7.Entities
 {
-    public class Library<T> where T : Book
+    public class Library
     {
-        public Catalog<T> Catalog { get; private set; }
+        public Catalog Catalog { get; private set; }
         public HashSet<string> PressReleaseItems { get; set; }
 
-        public Library(Catalog<T> catalog)
+        public Library(IAbstractCatalogFactory catalogFactory)
         {
-            Catalog = catalog;
-            FillPressReleaseItems();
-        }
-
-        private void FillPressReleaseItems()
-        {
-            PressReleaseItems = new HashSet<string>();
-
-            if (typeof(T) == typeof(EBook))
-            {
-                var eBooks = Catalog.Books.Select(x => x.Value as EBook).ToList();
-
-                foreach (var item in eBooks)
-                {
-                    item.AvailableFormats.ForEach(x => PressReleaseItems.Add(x));
-                }
-            }
-            else if (typeof(T) == typeof(PaperBook))
-            {
-                var paperBooks = Catalog.Books.Select(x => x.Value as PaperBook).ToList();
-
-                paperBooks.ForEach(x => PressReleaseItems.Add(x.Publisher));
-            }
+            Catalog = catalogFactory.CreateCatalog();
+            PressReleaseItems = catalogFactory.CreatePressReleaseItems(Catalog);
         }
     }
 }

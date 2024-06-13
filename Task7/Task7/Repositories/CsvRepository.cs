@@ -11,9 +11,14 @@ namespace Task7.Repositories
     {
         private string _filePath = "";
 
-        public Library<EBook> SaveEBooks()
+        public CsvRepository(string filePath)
         {
-            var catalog = new Catalog<EBook>();
+            _filePath = filePath;
+        }
+
+        public Catalog SaveEBooks()
+        {
+            var catalog = new Catalog();
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -35,20 +40,23 @@ namespace Task7.Repositories
                     formats.AddRange(record.Format.Split(","));
                 }
 
-                catalog.AddBook(record.Identifier, new EBook(record.Title, record.Identifier, formats));
+                var authors = GetAuthors(record.Creator);
+
+                catalog.AddBook(record.Identifier, new EBook(record.Title, record.Identifier, formats, authors));
             }
 
-            return new Library<EBook>(catalog);
+            return catalog;
         }
 
-        public Library<PaperBook> SavePaperBooks()
+        public Catalog SavePaperBooks()
         {
-            var catalog = new Catalog<PaperBook>();
+            var catalog = new Catalog();
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 Delimiter = ",",
-                Escape = '\\'
+                Escape = '\\',
+                BadDataFound = null
             };
             using var streamReader = File.OpenText(_filePath);
 
@@ -74,10 +82,53 @@ namespace Task7.Repositories
                     }
                 }
 
-                catalog.AddBook(record.Identifier, new PaperBook(record.Title, record.Publisher, isbns));
+                var authors = GetAuthors(record.Creator);
+
+                catalog.AddBook(record.Identifier, new PaperBook(record.Title, record.Publisher, isbns, authors));
             }
 
-            return new Library<PaperBook>(catalog);
+            return catalog;
+        }
+
+        private HashSet<Author> GetAuthors(string authorsString)
+        {
+            var result = new HashSet<Author>();
+
+            if (!string.IsNullOrEmpty(authorsString))
+            {
+                var authors = authorsString.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i = 0; i < authors.Length; i++)
+                {
+                    var fullName = authors[i].Trim();
+                    DateTime birthDate = new DateTime();
+
+                    if (i + 1 < authors.Length && authors[i + 1].Any(char.IsDigit))
+                    {
+                        var datePart = authors[i + 1].Trim();
+                        var dateSegments = datePart.Split('-');
+
+                        if (dateSegments.Length > 0 && int.TryParse(dateSegments[0], out int year))
+                        {
+                            birthDate = new DateTime(year, 1, 1);
+                        }
+
+                        i++;
+                    }
+
+                    var nameParts = fullName.Split(' ');
+
+                    if (nameParts.Length >= 1)
+                    {
+                        var firstName = nameParts[0];
+                        var lastName = nameParts.Length >= 2 ? nameParts[nameParts.Length - 1] : "";
+
+                        result.Add(new Author(firstName, lastName, birthDate));
+
+                    }
+                }
+            }
+            return result;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Task7.Repositories.Abstraction
 {
     public interface IXmlRepository
     {
-        void SaveEBooks(Catalog<EBook> catalog, string fileName);
-        void SavePaperBooks(Catalog<PaperBook> catalog, string fileName);
+        void SaveCatalog(Catalog catalog, string filePath);
+        Catalog LoadCatalog(string filePath);
     }
 }
