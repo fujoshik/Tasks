@@ -4,7 +4,7 @@ namespace Task6.Serializers.Abstraction
 {
     public interface ICatalogSerializer
     {
-        void Save(Catalog catalog, string directoryPath);
-        Catalog Restore(string directoryPath);
+        void SaveCatalog(Catalog catalog, string filePath);
+        Catalog LoadCatalog(string filePath);
     }
 }

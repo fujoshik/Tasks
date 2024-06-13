@@ -6,26 +6,31 @@ namespace Task6.Serializers
 {
     public class XmlCatalogSerializer : ICatalogSerializer
     {
-        public Catalog Restore(string directoryPath)
+        private readonly XmlSerializer _serializer;
+
+        public XmlCatalogSerializer()
         {
-            Catalog catalog = new Catalog();
-            XmlSerializer serializer = new XmlSerializer(typeof(Catalog));
-
-            using (var reader = new FileStream(directoryPath, FileMode.Open))
+            _serializer = new XmlSerializer(typeof(List<Book>));
+        }
+        public void SaveCatalog(Catalog catalog, string filePath)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                catalog = serializer.Deserialize(reader) as Catalog;
+                _serializer.Serialize(stream, catalog.Books);
             }
-
-            return catalog;
         }
 
-        public void Save(Catalog catalog, string directoryPath)
+        public Catalog LoadCatalog(string filePath)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(Catalog));
-
-            using (var writer = new StreamWriter(directoryPath))
+            using (var stream = new FileStream(filePath, FileMode.Open))
             {
-                serializer.Serialize(writer, catalog);
+                var books = _serializer.Deserialize(stream);
+                var catalog = new Catalog();
+                foreach (var book in books as List<Book>)
+                {
+                    catalog.AddBook(book.Isbn, book);
+                }
+                return catalog;
             }
         }
     }
